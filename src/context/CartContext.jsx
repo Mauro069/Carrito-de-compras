@@ -1,11 +1,26 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 
 /* Creamos el context, se le puede pasar un valor inicial */
 const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
-  /* Creamos un estado para el carrito, que sera un array vacio que luego tendra objetos */
-  const [cartItems, setCartItems] = useState([]);
+  /* Creamos un estado para el carrito */
+  const [cartItems, setCartItems] = useState(() => {
+    try {
+      /* Verificamos si hay productos en el local storage,
+      si hay algo lo parseamos porque se guarda como string 
+      y si no hay nada devolvemos un array vacio */
+      const productosEnLocalStorage = localStorage.getItem("cartProducts");
+      return productosEnLocalStorage ? JSON.parse(productosEnLocalStorage) : [];
+    } catch (error) {
+      return [];
+    }
+  });
+
+  /* Cada vez que se actualize el carrito seteamos el local storage para guardar los productos */
+  useEffect(() => {
+    localStorage.setItem("cartProducts", JSON.stringify(cartItems));
+  }, [cartItems]);
 
   /* Creamos la funcion para agregar productos al carrito */
   const AddItemToCart = (item) => {
