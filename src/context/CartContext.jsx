@@ -25,16 +25,18 @@ export const CartProvider = ({ children }) => {
   /* Creamos la funcion para agregar productos al carrito */
   const AddItemToCart = (product) => {
     /* Recibimos un producto y nos fijamos si ya esta en el carrito */
-    const inCart = cartItems.find((x) => x.id === product.id);
+    const inCart = cartItems.find(
+      (productInCart) => productInCart.id === product.id
+    );
 
     /* Si el producto se encuentra en el carrito, recorremos el carrito
     y al producto le sumamos uno a la cantidad, sino retornamos el carrito como estaba */
     if (inCart) {
       setCartItems(
-        cartItems.map((productsInCart) => {
-          if (productsInCart.id === product.id) {
+        cartItems.map((productInCart) => {
+          if (productInCart.id === product.id) {
             return { ...inCart, amount: inCart.amount + 1 };
-          } else return productsInCart;
+          } else return productInCart;
         })
       );
       /* Si el producto no se encuentra al carrito, lo agregamos y dejamos en uno la cantidad */
@@ -44,9 +46,28 @@ export const CartProvider = ({ children }) => {
   };
 
   /* Creamos la funcion para borrar productos del carrito */
-  const DeleteItemToCart = (itemId) => {
-    /* Filtramos el carrito y devolvemos todos, menos el que tiene la id que le pasamos */
-    setCartItems(cartItems.filter((cartItem) => cartItem.id !== itemId));
+  const DeleteItemToCart = (productId) => {
+    /* Buscamos el producto con su id */
+    const inCart = cartItems.find(
+      (productInCart) => productInCart.id === productId
+    );
+
+    /* Si la cantidad del producto es igual a 1, filtramos el carrito y lo sacamos */
+    if (inCart.amount === 1) {
+      setCartItems(
+        cartItems.filter((productInCart) => productInCart.id !== productId)
+      );
+    } else {
+      /* Si la cantidad es mayor a 1, recorremos el carrito
+      y al producto le restamos uno en su cantidad, sino devolvemos el carrito como estaba */
+      setCartItems(
+        cartItems.map((productInCart) => {
+          if (productInCart.id === productId) {
+            return { ...inCart, amount: inCart.amount - 1 };
+          } else return productInCart;
+        })
+      );
+    }
   };
 
   return (
