@@ -23,26 +23,24 @@ export const CartProvider = ({ children }) => {
   }, [cartItems]);
 
   /* Creamos la funcion para agregar productos al carrito */
-  const AddItemToCart = (item) => {
-    setCartItems((prevState) => {
-      /* Nos fijamos si en el estado anterior se encuentra el producto con su id */
-      const inCart = prevState.find((cartItem) => cartItem.id === item.id);
+  const AddItemToCart = (product) => {
+    /* Recibimos un producto y nos fijamos si ya esta en el carrito */
+    const inCart = cartItems.find((x) => x.id === product.id);
 
-      /* Si esta el producto en el carrito le sumamos 1 al amount (cantidad) sino no hacemos nada */
-      if (inCart) {
-        return prevState.map((cartItem) =>
-          cartItem.id === item.id
-            ? {
-                ...cartItem,
-                amount: cartItem.amount + 1,
-              }
-            : cartItem
-        );
-      }
-
-      /* Si el producto no esta en el carrito devolvemos el estado anterior mas el nuevo producto */
-      return [...prevState, { ...item, amount: 1 }];
-    });
+    /* Si el producto se encuentra en el carrito, recorremos el carrito
+    y al producto le sumamos uno a la cantidad, sino retornamos el carrito como estaba */
+    if (inCart) {
+      setCartItems(
+        cartItems.map((productsInCart) => {
+          if (productsInCart.id === product.id) {
+            return { ...inCart, amount: inCart.amount + 1 };
+          } else return productsInCart;
+        })
+      );
+      /* Si el producto no se encuentra al carrito, lo agregamos y dejamos en uno la cantidad */
+    } else {
+      setCartItems([...cartItems, { ...product, amount: 1 }]);
+    }
   };
 
   /* Creamos la funcion para borrar productos del carrito */
