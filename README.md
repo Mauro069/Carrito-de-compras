@@ -1,5 +1,5 @@
 # Carrito de compras usando React Context y Sass muy FACIL!
-Video en youtube: proximamente...
+Video en youtube: https://www.youtube.com/watch?v=ywvsztMU_oM&ab_channel=Mauro
 
 Deploy: https://carrito-de-compras-por-mauro.netlify.app/
 
